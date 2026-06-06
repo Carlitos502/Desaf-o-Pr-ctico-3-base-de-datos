@@ -14,5 +14,5 @@ Representación conceptual de las entidades: `Financiaciones`, `Proyectos`, `Sub
 ### 2. Modelo Relacional (MR)
 Implementación física incluyendo claves primarias (PK), claves foráneas (FK) y relaciones referenciales.
 
-## 🚀 Implementación Técnica
+Implementación Técnica
 El modelo fue desarrollado utilizando **DBML (Database Markup Language)** y visualizado mediante **dbdiagram.io**.
