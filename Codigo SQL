@@ -1,0 +1,70 @@
+-- =========================================================
+-- SCRIPT DDL: BASE DE DATOS - CONSTRUCTORA FUTURA
+-- =========================================================
+
+-- 1. Tablas Base (Jerarquía de Financiación)
+CREATE TABLE Financiaciones (
+    id_financiacion INT PRIMARY KEY,
+    monto_total DECIMAL(15, 2) NOT NULL,
+    fecha_aprobacion DATE NOT NULL,
+    estado_tramite VARCHAR(20),
+    moneda VARCHAR(3) DEFAULT 'USD'
+);
+
+CREATE TABLE Prestamos (
+    id_financiacion INT PRIMARY KEY,
+    tasa_interes_anual DECIMAL(5, 2),
+    plazo_meses INT,
+    banco_prestamista VARCHAR(100),
+    tipo_tasa VARCHAR(50),
+    CONSTRAINT fk_prestamo_financiacion FOREIGN KEY (id_financiacion) REFERENCES Financiaciones(id_financiacion)
+);
+
+CREATE TABLE Subvenciones (
+    id_financiacion INT PRIMARY KEY,
+    organismo_otorgante VARCHAR(150),
+    condiciones_cumplimiento TEXT,
+    fecha_vencimiento_seguimiento DATE,
+    alcance_financiero VARCHAR(100),
+    CONSTRAINT fk_subvencion_financiacion FOREIGN KEY (id_financiacion) REFERENCES Financiaciones(id_financiacion)
+);
+
+-- 2. Tablas Operativas
+CREATE TABLE Proyectos (
+    id_proyecto INT PRIMARY KEY,
+    nombre_proyecto VARCHAR(100) NOT NULL,
+    fecha_inicio DATE,
+    descripcion_tecnica TEXT,
+    ubicacion_geografica VARCHAR(100),
+    presupuesto_estimado DECIMAL(15, 2)
+);
+
+CREATE TABLE Subcontratistas (
+    id_subcontratista INT PRIMARY KEY,
+    razon_social VARCHAR(150) NOT NULL,
+    nit_documento VARCHAR(20) UNIQUE,
+    contacto_principal VARCHAR(100),
+    telefono_corporativo VARCHAR(20),
+    email_contacto VARCHAR(100)
+);
+
+CREATE TABLE Especialidades (
+    id_especialidad INT PRIMARY KEY,
+    nombre_especialidad VARCHAR(100) NOT NULL,
+    descripcion_area TEXT,
+    nivel_certificacion_requerido VARCHAR(50)
+);
+
+-- 3. Tabla Asociativa (N:M)
+CREATE TABLE Asignaciones_Proyecto (
+    id_asignacion INT PRIMARY KEY,
+    id_proyecto INT,
+    id_subcontratista INT,
+    id_especialidad INT,
+    fecha_asignacion DATE,
+    rol_desempenado VARCHAR(50),
+    prioridad_tarea VARCHAR(20),
+    CONSTRAINT fk_asignacion_proyecto FOREIGN KEY (id_proyecto) REFERENCES Proyectos(id_proyecto),
+    CONSTRAINT fk_asignacion_subcontratista FOREIGN KEY (id_subcontratista) REFERENCES Subcontratistas(id_subcontratista),
+    CONSTRAINT fk_asignacion_especialidad FOREIGN KEY (id_especialidad) REFERENCES Especialidades(id_especialidad)
+);
